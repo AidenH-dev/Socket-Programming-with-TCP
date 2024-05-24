@@ -2,6 +2,22 @@
 import socket
 
 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# now connect to the web server on port 80 - the normal http port
-s.connect(("www.python.org", 80))
+server_name = 'localhost'
+port = 8080
+
+print("Connecting to {server_name}, PORT: {port} ")
+
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client.connect((server_name, port))
+print(f"Just connected to {client.getpeername()}")
+
+message = f"Hello from {client.getsockname()}"
+client.sendall(message.encode('utf-8'))
+
+response = client.recv(1024)
+print(f"Received: {response.decode('utf-8')}")
+
+client.close()
+
+
+
