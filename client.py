@@ -2,22 +2,42 @@
 import socket
 
 
-server_name = 'localhost'
-port = 8080
+def main():
+    # Accept an integer between 1 and 100 from the keyboard
+    while True:
+        try:
+            user_input = int(input("Enter an integer between 1 and 100: "))
+            if 1 <= user_input <= 100:
+                break
+            else:
+                print("Please enter a number between 1 and 100.")
+        except ValueError:
+            print("Invalid input. Please enter an integer.")
 
-print("Connecting to {server_name}, PORT: {port} ")
+    # Create a TCP/IP socket
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect((server_name, port))
-print(f"Just connected to {client.getpeername()}")
+    # Connect to the server (replace 'server_address' and 'port' with actual server details)
+    server_address = 'server_address'  # e.g., 'localhost' or '192.168.1.1'
+    port = 12345  # replace with the actual port number
 
-message = f"Hello from {client.getsockname()}"
-client.sendall(message.encode('utf-8'))
+    s.connect((server_address, port))
 
-response = client.recv(1024)
-print(f"Received: {response.decode('utf-8')}")
+    try:
+        # Prepare the message
+        name = "Client of Alan Turing"
+        message = f"{name},{user_input}"
 
-client.close()
+        # Send data
+        s.sendall(message.encode())
 
+        # Look for the response
+        response = s.recv(1024)
+        print(f"Received: {response.decode()}")
 
+    finally:
+        # Close the socket
+        s.close()
 
+if __name__ == "__main__":
+    main()
